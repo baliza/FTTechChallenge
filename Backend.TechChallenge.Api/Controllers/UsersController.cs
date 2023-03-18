@@ -28,7 +28,6 @@ namespace Backend.TechChallenge.Api.Controllers
 		[Route("/get")]
 		public async Task<List<User>> GetUsers()
 		{
-			_logger.LogInformation("GetUsers");
 			try
 			{
 				var result = await _userService.GetAllUsers();
@@ -38,7 +37,7 @@ namespace Backend.TechChallenge.Api.Controllers
 			{
 				_logger.LogError("ERROR getting users", ex);
 
-				return new List<User>();
+				throw;
 			}
 		}
 
@@ -46,17 +45,26 @@ namespace Backend.TechChallenge.Api.Controllers
 		[Route("/create-user")]
 		public async Task<OperationResult> CreateUser(string name, string email, string address, string phone, string userType, string money)
 		{
-			var validationResult = _validator.IsValid(name, email, address, phone, userType, money);
+			try
+			{
+				var validationResult = _validator.IsValid(name, email, address, phone, userType, money);
 
-			if (!validationResult.IsSuccess)
-				return validationResult;
+				if (!validationResult.IsSuccess)
+					return validationResult;
 
-			var result = await _userService.AddUser(name, email, address, phone, userType, money);
+				var result = await _userService.AddUser(name, email, address, phone, userType, money);
 
-			if (result.IsSuccess)
-				return new OperationResult { Message = "User Created" };
-			_logger.LogError("Could not register user");
-			return result;
+				if (result.IsSuccess)
+					return new OperationResult { Message = "User Created" };
+				_logger.LogError("Could not register user");
+				return result;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("ERROR adding user", ex);
+
+				throw;
+			}
 		}
 	}
 }

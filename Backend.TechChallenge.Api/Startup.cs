@@ -50,6 +50,8 @@ namespace Backend.TechChallenge.Api
             });
             app.UseRouting();
 
+            app.UseErrorHandlerMiddleware();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -1,4 +1,5 @@
-﻿using Backend.TechChallenge.Core.Models;
+﻿using Backend.TechChallenge.Api.Services;
+using Backend.TechChallenge.Core.Models;
 using Backend.TechChallenge.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -17,6 +18,7 @@ namespace Backend.TechChallenge.Core.Extensions
 
 			services.AddTransient<IEmailFixer, EmailFixer>();
 			services.AddTransient<IUserFactory, UserFactory>();
+			services.AddTransient<IUserService, UserService>();
 			services.AddTransient<IDictionary<UserType, IBonusCalculator>>(BuildBonusCalculator);
 			return services;
 		}

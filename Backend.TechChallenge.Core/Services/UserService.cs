@@ -27,6 +27,7 @@ namespace Backend.TechChallenge.Api.Services
 		{
 			try
 			{
+				throw new InvalidCastException("aa");
 				var newUser = _factory.CreateUser(name, email, address, phone, userType, money);
 
 				var users = await _repo.GetAll();
@@ -45,28 +46,16 @@ namespace Backend.TechChallenge.Api.Services
 			catch (Exception ex)
 			{
 				_logger.LogError("ERROR adding user.", ex);
-				return new OperationResult
-				{
-					IsSuccess = false,
-					Message = " could not add user"
-				};
+				throw;
 			}
 			return new OperationResult();
 		}
 
 		public async Task<OperationResult<List<User>>> GetAllUsers()
 		{
-			try
-			{
-				var users = await _repo.GetAll();
+			var users = await _repo.GetAll();
 
-				return new OperationResult<List<User>>(users);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("ERROR getting user.", ex);
-				return new OperationResult<List<User>>(" could not get users");
-			}
+			return new OperationResult<List<User>>(users);
 		}
 
 		private bool CheckIfUserExists(User newUser, List<User> users)
