@@ -1,4 +1,4 @@
-using Backend.TechChallenge.Api.Controllers;
+using Backend.TechChallenge.Core.Models;
 using Backend.TechChallenge.Core.Services;
 using Xunit;
 
@@ -7,18 +7,29 @@ namespace Backend.TechChallenge.Test.Core
 	[CollectionDefinition("Tests", DisableParallelization = true)]
 	public class UserFacforyTest
 	{
-		[Fact]
-		public void Creates_user_ok()
+		[Theory]
+		[InlineData(UserType.Normal, "124", 138.88)]
+		[InlineData(UserType.Normal, "100", 100)]
+		[InlineData(UserType.Normal, "85", 85)]
+		[InlineData(UserType.Normal, "10", 10)]
+		[InlineData(UserType.Normal, "2", 2)]
+		[InlineData(UserType.SuperUser, "124", 148.8)]
+		[InlineData(UserType.SuperUser, "100", 100)]
+		[InlineData(UserType.SuperUser, "85", 85)]
+		[InlineData(UserType.Premium, "124", 372)]
+		[InlineData(UserType.Premium, "100", 100)]
+		[InlineData(UserType.Premium, "85", 85)]
+		public void Creates_User_As_expected(UserType userType, string money, decimal expectedMoney)
 		{
 			var sut = new UserFactory(new EmailFixer());
-			var result = sut.CreateUser("Mike", "mike@gmail.com", "Av. Juan G", "+349 1122354215", "Normal", "124");
+			var result = sut.CreateUser("Mike", "mike@gmail.com", "Av. Juan G", "+349 1122354215", userType.ToString(), money);
 
 			Assert.Equal("Mike", result.Name);
 			Assert.Equal("mike@gmail.com", result.Email);
 			Assert.Equal("Av. Juan G", result.Address);
 			Assert.Equal("+349 1122354215", result.Phone);
-			Assert.Equal(138.88m, result.Money);
-			Assert.Equal("Normal", result.UserType.ToString());
+			Assert.Equal(userType, result.UserType);
+			Assert.Equal(expectedMoney, result.Money);
 		}
 	}
 }
