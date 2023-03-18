@@ -1,3 +1,5 @@
+using Backend.TechChallenge.Api.Extensions;
+using Backend.TechChallenge.Core.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,8 @@ namespace Backend.TechChallenge.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddApplicationDependencies();
+            services.AddDomainDependencies();
             services.AddSwaggerGen();
         }
 

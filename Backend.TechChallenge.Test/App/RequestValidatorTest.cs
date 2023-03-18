@@ -1,5 +1,5 @@
 using Backend.TechChallenge.Api.Controllers;
-
+using Backend.TechChallenge.Api.Services;
 using Xunit;
 
 namespace Backend.TechChallenge.Test
@@ -15,7 +15,7 @@ namespace Backend.TechChallenge.Test
 			var result = sut.IsValid("Mike", "mike@gmail.com", "Av. Juan G", "+349 1122354215", "Normal", "124");
 
 			Assert.True(result.IsSuccess);
-			Assert.Null(result.Error);
+			Assert.Null(result.Message);
 		}
 
 		private static RequestValidator GetSut()
@@ -44,7 +44,7 @@ namespace Backend.TechChallenge.Test
 			var result = sut.IsValid(name, email, address, phone, userType, money);
 
 			Assert.False(result.IsSuccess);
-			Assert.Equal(expected, result.Error);
+			Assert.Equal(expected, result.Message);
 		}
 	}
 }

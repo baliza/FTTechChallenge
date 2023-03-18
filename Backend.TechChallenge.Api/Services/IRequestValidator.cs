@@ -1,4 +1,6 @@
-﻿namespace Backend.TechChallenge.Api.Controllers
+﻿using Backend.TechChallenge.Core.Models;
+
+namespace Backend.TechChallenge.Api.Services
 {
 	public interface IRequestValidator
 	{

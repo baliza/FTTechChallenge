@@ -1,4 +1,4 @@
-﻿namespace Backend.TechChallenge.Api.Controllers
+﻿namespace Backend.TechChallenge.Core.Models
 {
 	public class OperationResult
 	{
@@ -10,15 +10,9 @@
 		public OperationResult(string error)
 		{
 			IsSuccess = false;
-			this.Error = error;
+			this.Message = error;
 		}
 
-		public bool IsSuccess { get; set; }
-		public string Error { get; set; }
-	}
-
-	public class Result
-	{
 		public bool IsSuccess { get; set; }
 		public string Message { get; set; }
 	}

@@ -1,10 +1,9 @@
-﻿using System.Globalization;
+﻿using Backend.TechChallenge.Core.Models;
 
-namespace Backend.TechChallenge.Api.Controllers
+namespace Backend.TechChallenge.Api.Services
 {
 	public class RequestValidator : IRequestValidator
 	{
-
 		public OperationResult IsValid(string name, string email, string address, string phone, string userType, string money)
 		{
 			//Validate if Name is null
@@ -21,7 +20,7 @@ namespace Backend.TechChallenge.Api.Controllers
 				return new OperationResult(" The phone is required");
 			if (string.IsNullOrWhiteSpace(userType))
 				return new OperationResult(" The userType is required");
-			//Validate if money is decimal 
+			//Validate if money is decimal
 			if (string.IsNullOrWhiteSpace(money)
 				|| !decimal.TryParse(money, out _))
 			{

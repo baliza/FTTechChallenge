@@ -1,4 +1,5 @@
 ﻿using Backend.TechChallenge.Api.Extensions;
+using Backend.TechChallenge.Api.Services;
 using Backend.TechChallenge.Core.Models;
 using Backend.TechChallenge.Core.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -14,22 +15,30 @@ namespace Backend.TechChallenge.Api.Controllers
 	[Route("[controller]")]
 	public partial class UsersController : ControllerBase
 	{
-		private readonly UserFactory _userFactory;
+		private readonly IRequestValidator _validator;
+		private readonly IUserFactory _userFactory;
 
-		public UsersController()
+		public UsersController(IRequestValidator validator, IUserFactory userFactory)
 		{
-			_userFactory = new UserFactory(new EmailFixer());
+			_validator = validator;
+			_userFactory = userFactory;
+		}
+
+		[HttpGet]
+		[Route("/get")]
+		public async Task<OperationResult> GetUser()
+		{
+			return new OperationResult { IsSuccess = true, Message = "paco" };
 		}
 
 		[HttpPost]
 		[Route("/create-user")]
-		public async Task<Result> CreateUser(string name, string email, string address, string phone, string userType, string money)
+		public async Task<OperationResult> CreateUser(string name, string email, string address, string phone, string userType, string money)
 		{
-			var validator = new RequestValidator();
-			var operationResult = validator.IsValid(name, email, address, phone, userType, money);
+			var operationResult = _validator.IsValid(name, email, address, phone, userType, money);
 
 			if (!operationResult.IsSuccess)
-				return operationResult.ToResult();
+				return operationResult;
 
 			var newUser = _userFactory.CreateUser(name, email, address, phone, userType, money);
 
@@ -37,15 +46,15 @@ namespace Backend.TechChallenge.Api.Controllers
 
 			var checkinResult = CheckIfUserExists(newUser, users);
 			if (!checkinResult.IsSuccess)
-				return checkinResult.ToResult();
+				return checkinResult;
 
 			WriteUserToFile(newUser);
 
 			return new OperationResult
 			{
 				IsSuccess = true,
-				Error = "User Created"
-			}.ToResult();
+				Message = "User Created"
+			};
 		}
 
 		private OperationResult CheckIfUserExists(User newUser, List<User> users)
@@ -78,7 +87,7 @@ namespace Backend.TechChallenge.Api.Controllers
 					return new OperationResult
 					{
 						IsSuccess = false,
-						Error = " The user is duplicated"
+						Message = " The user is duplicated"
 					};
 				}
 			}
@@ -88,7 +97,7 @@ namespace Backend.TechChallenge.Api.Controllers
 				return new OperationResult
 				{
 					IsSuccess = false,
-					Error = " The user is duplicated"
+					Message = " The user is duplicated"
 				};
 			}
 			return new OperationResult();
