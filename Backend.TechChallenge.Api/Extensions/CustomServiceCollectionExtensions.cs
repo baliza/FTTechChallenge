@@ -1,4 +1,6 @@
 ﻿using Backend.TechChallenge.Api.Services;
+using Backend.TechChallenge.Core.ExternalServices;
+using Backend.TechChallenge.Infra.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -14,6 +16,7 @@ namespace Backend.TechChallenge.Api.Extensions
 			}
 
 			services.AddTransient<IRequestValidator, RequestValidator>();
+			services.AddTransient<IUsersRepository, UsersFileRepository>();
 			return services;
 		}
 	}

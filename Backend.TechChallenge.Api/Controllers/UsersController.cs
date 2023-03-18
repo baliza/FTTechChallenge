@@ -1,9 +1,8 @@
-﻿using Backend.TechChallenge.Api.Extensions;
-using Backend.TechChallenge.Api.Services;
+﻿using Backend.TechChallenge.Api.Services;
 using Backend.TechChallenge.Core.Models;
 using Backend.TechChallenge.Core.Services;
+using Backend.TechChallenge.Core.ExternalServices;
 using Microsoft.AspNetCore.Mvc;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,18 +16,21 @@ namespace Backend.TechChallenge.Api.Controllers
 	{
 		private readonly IRequestValidator _validator;
 		private readonly IUserFactory _userFactory;
+		private readonly IUsersRepository _repo;
 
-		public UsersController(IRequestValidator validator, IUserFactory userFactory)
+		public UsersController(IRequestValidator validator, IUserFactory userFactory, IUsersRepository repo)
 		{
 			_validator = validator;
 			_userFactory = userFactory;
+			_repo = repo;
 		}
 
 		[HttpGet]
 		[Route("/get")]
-		public async Task<OperationResult> GetUser()
+		public async Task<List<User>> GetUser()
 		{
-			return new OperationResult { IsSuccess = true, Message = "paco" };
+			var result = await _repo.GetAll();
+			return result;
 		}
 
 		[HttpPost]
@@ -36,19 +38,18 @@ namespace Backend.TechChallenge.Api.Controllers
 		public async Task<OperationResult> CreateUser(string name, string email, string address, string phone, string userType, string money)
 		{
 			var operationResult = _validator.IsValid(name, email, address, phone, userType, money);
-			var _repo = new UsersRepository();
 			if (!operationResult.IsSuccess)
 				return operationResult;
 
 			var newUser = _userFactory.CreateUser(name, email, address, phone, userType, money);
 
-			var users = _repo.GetAll();
+			var users = await _repo.GetAll();
 
 			var checkinResult = CheckIfUserExists(newUser, users);
 			if (!checkinResult.IsSuccess)
 				return checkinResult;
 
-			_repo.Save(newUser);
+			await _repo.Save(newUser);
 
 			return new OperationResult
 			{
@@ -102,7 +103,5 @@ namespace Backend.TechChallenge.Api.Controllers
 			}
 			return new OperationResult();
 		}
-
-		
 	}
 }
