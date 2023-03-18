@@ -1,5 +1,6 @@
 using Backend.TechChallenge.Core.Models;
 using Backend.TechChallenge.Core.Services;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Backend.TechChallenge.Test.Core
@@ -21,7 +22,7 @@ namespace Backend.TechChallenge.Test.Core
 		[InlineData(UserType.Premium, "85", 85)]
 		public void Add_User_As_expected(UserType userType, string money, decimal expectedMoney)
 		{
-			var sut = new UserFactory(new EmailFixer());
+			var sut = new UserFactory(new EmailFixer(), BuildBonusCalculator());
 			var result = sut.CreateUser("Mike", "mike@gmail.com", "Av. Juan G", "+349 1122354215", userType.ToString(), money);
 
 			Assert.Equal("Mike", result.Name);
@@ -30,6 +31,14 @@ namespace Backend.TechChallenge.Test.Core
 			Assert.Equal("+349 1122354215", result.Phone);
 			Assert.Equal(userType, result.UserType);
 			Assert.Equal(expectedMoney, result.Money);
+		}
+		private static IDictionary<UserType, IBonusCalculator> BuildBonusCalculator()
+		{
+			return new Dictionary<UserType, IBonusCalculator> {
+				{ UserType.Normal,new BonusCalculatorNormal() },
+				{ UserType.Premium,new BonusCalculatorPremiun() },
+				{ UserType.SuperUser,new BonusCalculatorSuperUser() }
+				};
 		}
 	}
 }
