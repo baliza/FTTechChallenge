@@ -3,6 +3,7 @@ using Backend.TechChallenge.Api.Services;
 using Backend.TechChallenge.Core.ExternalServices;
 using Backend.TechChallenge.Core.Models;
 using Backend.TechChallenge.Core.Services;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,11 +18,14 @@ namespace Backend.TechChallenge.Test
 		private Mock<IUserFactory> moqUserFactory;
 		private Mock<IUsersRepository> moqUsersRepository;
 
+		private Mock<ILogger<UsersController>> _mockUsersControllerLogger;
+
 		public UsersControllerTest()
 		{
 			moqValidator = new Mock<IRequestValidator>();
 			moqUserFactory = new Mock<IUserFactory>();
 			moqUsersRepository = new Mock<IUsersRepository>();
+			_mockUsersControllerLogger = new Mock<ILogger<UsersController>>();
 			SetRepo();
 			SetValidator();
 		}
@@ -51,7 +55,7 @@ namespace Backend.TechChallenge.Test
 
 		private UsersController CreateSut()
 		{
-			return new UsersController(moqValidator.Object, moqUserFactory.Object, moqUsersRepository.Object);
+			return new UsersController(moqValidator.Object, moqUserFactory.Object, moqUsersRepository.Object, _mockUsersControllerLogger.Object);
 		}
 
 		private void SetValidator()

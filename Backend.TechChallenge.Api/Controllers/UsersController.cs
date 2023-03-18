@@ -1,11 +1,11 @@
 ﻿using Backend.TechChallenge.Api.Services;
+using Backend.TechChallenge.Core.ExternalServices;
 using Backend.TechChallenge.Core.Models;
 using Backend.TechChallenge.Core.Services;
-using Backend.TechChallenge.Core.ExternalServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Backend.TechChallenge.Api.Controllers
@@ -17,20 +17,32 @@ namespace Backend.TechChallenge.Api.Controllers
 		private readonly IRequestValidator _validator;
 		private readonly IUserFactory _userFactory;
 		private readonly IUsersRepository _repo;
+		private readonly ILogger<UsersController> _logger;
 
-		public UsersController(IRequestValidator validator, IUserFactory userFactory, IUsersRepository repo)
+		public UsersController(IRequestValidator validator, IUserFactory userFactory, IUsersRepository repo, ILogger<UsersController> logger)
 		{
 			_validator = validator;
 			_userFactory = userFactory;
 			_repo = repo;
+			_logger = logger;
 		}
 
 		[HttpGet]
 		[Route("/get")]
-		public async Task<List<User>> GetUser()
+		public async Task<List<User>> GetUsers()
 		{
-			var result = await _repo.GetAll();
-			return result;
+			_logger.LogInformation("GetUsers");
+			try
+			{
+				var result = await _repo.GetAll();
+				return result;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("ERROR getting users", ex);
+
+				return new List<User>();
+			}
 		}
 
 		[HttpPost]
@@ -60,6 +72,7 @@ namespace Backend.TechChallenge.Api.Controllers
 
 		private OperationResult CheckIfUserExists(User newUser, List<User> users)
 		{
+			_logger.LogInformation("Checking if user exists. ", newUser);
 			try
 			{
 				var isDuplicated = false;
@@ -83,7 +96,7 @@ namespace Backend.TechChallenge.Api.Controllers
 
 				if (isDuplicated)
 				{
-					Debug.WriteLine(" The user is duplicated");
+					_logger.LogError(" The user is duplicated", newUser);
 
 					return new OperationResult
 					{
@@ -92,15 +105,16 @@ namespace Backend.TechChallenge.Api.Controllers
 					};
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
-				Debug.WriteLine(" The user is duplicated");
+				_logger.LogError("ERROR checking user.", ex);
 				return new OperationResult
 				{
 					IsSuccess = false,
 					Message = " The user is duplicated"
 				};
 			}
+			_logger.LogInformation("User NOT found");
 			return new OperationResult();
 		}
 	}
