@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Backend.TechChallenge.Api.Controllers
@@ -72,31 +73,13 @@ namespace Backend.TechChallenge.Api.Controllers
 
 		private OperationResult CheckIfUserExists(User newUser, List<User> users)
 		{
-			_logger.LogInformation("Checking if user exists. ", newUser);
 			try
 			{
-				var isDuplicated = false;
-				foreach (var user in users)
-				{
-					if (user.Email == newUser.Email
-						||
-						user.Phone == newUser.Phone)
-					{
-						isDuplicated = true;
-					}
-					else if (user.Name == newUser.Name)
-					{
-						if (user.Address == newUser.Address)
-						{
-							isDuplicated = true;
-							throw new Exception("User is duplicated");
-						}
-					}
-				}
+				var isDuplicated = users.Any(u => new UserComparer().Compare(newUser, u));
 
 				if (isDuplicated)
 				{
-					_logger.LogError(" The user is duplicated", newUser);
+					_logger.LogInformation(" The user is duplicated", newUser);
 
 					return new OperationResult
 					{
@@ -114,7 +97,6 @@ namespace Backend.TechChallenge.Api.Controllers
 					Message = " The user is duplicated"
 				};
 			}
-			_logger.LogInformation("User NOT found");
 			return new OperationResult();
 		}
 	}
