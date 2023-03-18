@@ -19,7 +19,7 @@ namespace Backend.TechChallenge.Test.Core
 		[InlineData(UserType.Premium, "124", 372)]
 		[InlineData(UserType.Premium, "100", 100)]
 		[InlineData(UserType.Premium, "85", 85)]
-		public void Creates_User_As_expected(UserType userType, string money, decimal expectedMoney)
+		public void Add_User_As_expected(UserType userType, string money, decimal expectedMoney)
 		{
 			var sut = new UserFactory(new EmailFixer());
 			var result = sut.CreateUser("Mike", "mike@gmail.com", "Av. Juan G", "+349 1122354215", userType.ToString(), money);
