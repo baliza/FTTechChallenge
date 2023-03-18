@@ -14,8 +14,11 @@ namespace Backend.TechChallenge.Api.Controllers
 	[Route("[controller]")]
 	public partial class UsersController : ControllerBase
 	{
+		private readonly UserFactory _userFactory;
+
 		public UsersController()
 		{
+			_userFactory = new UserFactory(new EmailFixer());
 		}
 
 		[HttpPost]
@@ -28,7 +31,7 @@ namespace Backend.TechChallenge.Api.Controllers
 			if (!operationResult.IsSuccess)
 				return operationResult.ToResult();
 
-			var newUser = UserFactory.CreateUser(name, email, address, phone, userType, money);
+			var newUser = _userFactory.CreateUser(name, email, address, phone, userType, money);
 
 			var users = ReadUsers();
 
@@ -104,7 +107,7 @@ namespace Backend.TechChallenge.Api.Controllers
 					Email = line.Split(',')[1].ToString(),
 					Phone = line.Split(',')[2].ToString(),
 					Address = line.Split(',')[3].ToString(),
-					UserType = line.Split(',')[4].ToString(),
+					UserType = line.Split(',')[4].ToUserType(),
 					Money = decimal.Parse(line.Split(',')[5].ToString()),
 				};
 				u.Add(user);
