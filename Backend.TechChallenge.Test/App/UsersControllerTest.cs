@@ -11,14 +11,14 @@ namespace Backend.TechChallenge.Test
 	public class UsersControllerTest
 	{
 		private Mock<IRequestValidator> moqValidator;
-		private Mock<IUserFactory> moqUserService;
+		private Mock<IUserFactory> moqUserFactory;
 
 		public UsersControllerTest()
 		{
 			moqValidator = new Mock<IRequestValidator>();
-			moqUserService = new Mock<IUserFactory>();
+			moqUserFactory = new Mock<IUserFactory>();
 			moqValidator.Setup(s => s.IsValid(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new OperationResult());
-			moqUserService.Setup(s => s.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
+			moqUserFactory.Setup(s => s.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
 		}
 
 		[Fact]
@@ -46,8 +46,10 @@ namespace Backend.TechChallenge.Test
 		private UsersController CreateSut()
 		{
 			moqValidator.Setup(s => s.IsValid(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new OperationResult());
-			moqUserService.Setup(s => s.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
-			return new UsersController(moqValidator.Object, moqUserService.Object);
+			moqUserFactory.Setup(s => s.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(
+					new User { Name = "Agustina", Email = "Agustina@gmail.com", Address = "Av. Juan G", Phone = "+349 1122354215", UserType = UserType.Normal, Money = 124m }); 
+			return new UsersController(moqValidator.Object, moqUserFactory.Object);
+
 		}
 	}
 }
