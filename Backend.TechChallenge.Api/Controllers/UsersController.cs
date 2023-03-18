@@ -36,19 +36,19 @@ namespace Backend.TechChallenge.Api.Controllers
 		public async Task<OperationResult> CreateUser(string name, string email, string address, string phone, string userType, string money)
 		{
 			var operationResult = _validator.IsValid(name, email, address, phone, userType, money);
-
+			var _repo = new UsersRepository();
 			if (!operationResult.IsSuccess)
 				return operationResult;
 
 			var newUser = _userFactory.CreateUser(name, email, address, phone, userType, money);
 
-			var users = ReadUsers();
+			var users = _repo.GetAll();
 
 			var checkinResult = CheckIfUserExists(newUser, users);
 			if (!checkinResult.IsSuccess)
 				return checkinResult;
 
-			WriteUserToFile(newUser);
+			_repo.Save(newUser);
 
 			return new OperationResult
 			{
@@ -103,26 +103,6 @@ namespace Backend.TechChallenge.Api.Controllers
 			return new OperationResult();
 		}
 
-		private List<User> ReadUsers()
-		{
-			var u = new List<User>();
-			var reader = ReadUsersFromFile();
-			while (reader.Peek() >= 0)
-			{
-				var line = reader.ReadLineAsync().Result;
-				var user = new User
-				{
-					Name = line.Split(',')[0].ToString(),
-					Email = line.Split(',')[1].ToString(),
-					Phone = line.Split(',')[2].ToString(),
-					Address = line.Split(',')[3].ToString(),
-					UserType = line.Split(',')[4].ToUserType(),
-					Money = decimal.Parse(line.Split(',')[5].ToString()),
-				};
-				u.Add(user);
-			}
-			reader.Close();
-			return u;
-		}
+		
 	}
 }
