@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Backend.TechChallenge.Api\Backend.TechChallenge.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infra\" />
+  </ItemGroup>
+
 </Project>

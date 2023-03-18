@@ -1,4 +1,6 @@
 ﻿using Backend.TechChallenge.Api.Extensions;
+using Backend.TechChallenge.Core.Models;
+using Backend.TechChallenge.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 using System;

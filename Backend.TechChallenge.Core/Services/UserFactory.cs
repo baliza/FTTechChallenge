@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Backend.TechChallenge.Core.Models;
+using System;
 
-namespace Backend.TechChallenge.Api.Controllers
+namespace Backend.TechChallenge.Core.Services
 {
 	public static class UserFactory
 	{

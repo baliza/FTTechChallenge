@@ -1,5 +1,5 @@
 using Backend.TechChallenge.Api.Controllers;
-
+using Backend.TechChallenge.Core.Services;
 using Xunit;
 
 namespace Backend.TechChallenge.Test
