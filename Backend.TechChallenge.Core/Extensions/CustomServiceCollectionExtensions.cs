@@ -1,6 +1,7 @@
 ﻿using Backend.TechChallenge.Api.Services;
 using Backend.TechChallenge.Core.Models;
 using Backend.TechChallenge.Core.Services;
+using Backend.TechChallenge.Core.Tools;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

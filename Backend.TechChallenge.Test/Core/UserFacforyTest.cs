@@ -1,5 +1,6 @@
 using Backend.TechChallenge.Core.Models;
 using Backend.TechChallenge.Core.Services;
+using Backend.TechChallenge.Core.Tools;
 using System.Collections.Generic;
 using Xunit;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Backend.TechChallenge.Core.Services
+namespace Backend.TechChallenge.Core.Tools
 {
 	public class EmailFixer : IEmailFixer
 	{
