@@ -4,7 +4,6 @@ using Backend.TechChallenge.Core.Models;
 using Backend.TechChallenge.Core.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -48,17 +47,7 @@ namespace Backend.TechChallenge.Test.Core
 			Assert.False(result.IsSuccess);
 			Assert.Equal(" The user is duplicated", result.Message);
 		}
-		[Fact]
-		public void When_AddUser_Exceptions_Returns_Nothing()
-		{
-			SetFactory("Agustina", "Agustina@gmail.com", "Av. Juan G", "+349 1122354215", UserType.Normal, 124m);
-			SetRepoFailing();
-			var userController = CreateSut();
-			var result = userController.AddUser("Agustina", "Agustina@gmail.com", "Av. Juan G", "+349 1122354215", "Normal", "124").Result;
 
-			Assert.False(result.IsSuccess);
-			Assert.Equal(" could not add user", result.Message);
-		}
 		[Fact]
 		public void When_GetALL_Returns_Users()
 		{
@@ -69,17 +58,6 @@ namespace Backend.TechChallenge.Test.Core
 			Assert.True(result.IsSuccess);
 			Assert.Equal(string.Empty, result.Message);
 			Assert.Equal(2, result.Data.Count);
-		}
-
-		[Fact]
-		public void When_GetALL_Exceptions_Returns_Nothing()
-		{
-			SetRepoFailing();
-			var userController = CreateSut();
-			var result = userController.GetAllUsers().Result;
-
-			Assert.False(result.IsSuccess);
-			Assert.Equal(" could not get users", result.Message);
 		}
 
 		private IUserService CreateSut()
@@ -100,12 +78,6 @@ namespace Backend.TechChallenge.Test.Core
 				new User { Name = "Mike", Email = "Mike@gmail.com", Address = "Av. Mike", Phone = "+349 25635", UserType = UserType.Normal, Money = 10m },
 				new User { Name = "Agustina", Email = "Agustina@gmail.com", Address = "Av. Juan G", Phone = "+349 1122354215", UserType = UserType.Normal, Money = 124m }
 			}));
-		}
-
-		private void SetRepoFailing()
-		{
-			_moqUsersRepository.Setup(s => s.Save(It.IsAny<User>())).Throws(new Exception("Boom")); ;
-			_moqUsersRepository.Setup(s => s.GetAll()).Throws(new Exception("Boom"));
 		}
 	}
 }

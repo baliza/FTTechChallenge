@@ -27,7 +27,6 @@ namespace Backend.TechChallenge.Api.Services
 		{
 			try
 			{
-				throw new InvalidCastException("aa");
 				var newUser = _factory.CreateUser(name, email, address, phone, userType, money);
 
 				var users = await _repo.GetAll();

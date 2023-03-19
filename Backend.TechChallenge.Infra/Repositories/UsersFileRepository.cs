@@ -9,11 +9,12 @@ namespace Backend.TechChallenge.Infra.Repository
 {
 	public class UsersFileRepository : IUsersRepository
 	{
-		private readonly string _connectionString = Directory.GetCurrentDirectory() + "/Files/Users.txt";
+		private readonly string _connectionString;
+		//private readonly string _connectionString = Directory.GetCurrentDirectory() + "/Files/Users.txt";
 
-		public UsersFileRepository()
+		public UsersFileRepository(string connectionString)
 		{
-			_connectionString = Directory.GetCurrentDirectory() + "/Files/Users.txt";
+			_connectionString = connectionString;
 		}
 
 		public async Task<List<User>> GetAll()
