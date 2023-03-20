@@ -25,7 +25,7 @@ namespace Backend.TechChallenge.Api.Controllers
 		}
 
 		[HttpGet]
-		[Route("/get")]
+		[Route("/get-all")]
 		public async Task<List<User>> GetUsers()
 		{
 			try
