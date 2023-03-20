@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Backend.TechChallenge.Api\Backend.TechChallenge.Api.csproj" />
+    <ProjectReference Include="..\..\src\Backend.TechChallenge.Api\Backend.TechChallenge.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>
